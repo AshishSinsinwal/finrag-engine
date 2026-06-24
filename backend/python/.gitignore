@@ -2,3 +2,4 @@
 /app/test_bm25.py
 /__pycache__/*
 temp.py
+/app/__pycache__/*

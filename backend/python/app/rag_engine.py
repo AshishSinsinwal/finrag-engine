@@ -2,8 +2,10 @@
 import pickle
 import re
 from rank_bm25 import BM25Okapi
+import os
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
+#from langchain_huggingface import HuggingFaceEmbeddings
 from app.config import (
     EMBEDDING_MODEL, TEXT_DB_DIR, TABLE_DB_DIR, BM25_FILE, ARTIFACT_DIR,
     VECTOR_TOP_K, BM25_TOP_K, RRF_K
@@ -29,13 +31,33 @@ class FinancialRAG:
         print("ALL ASSETS LOADED")
         print("=" * 80)
 
+    # ==========================================================
+    # EMBEDDINGS (UPDATED FOR CLOUD DEPLOYMENT)
+    # ==========================================================
+
     def _load_embeddings(self):
         print("\nLoading Embeddings...")
-        state.embeddings = HuggingFaceEmbeddings(
-            model_name=EMBEDDING_MODEL,
-            model_kwargs={"device": "cpu"},
-            encode_kwargs={"normalize_embeddings": True}
-        )
+
+        hf_token = os.environ.get("HF_TOKEN")
+
+        if hf_token:
+            print("Using Hugging Face Inference API (Zero-RAM Mode)")
+            self.embeddings = HuggingFaceEndpointEmbeddings(
+                model=EMBEDDING_MODEL,
+                task="feature-extraction",
+                huggingfacehub_api_token=hf_token
+            )
+        else:
+            print("WARNING: No HF_TOKEN found. Using Local CPU mode (May crash on free tiers!)")
+            from langchain_huggingface import HuggingFaceEmbeddings
+            self.embeddings = HuggingFaceEmbeddings(
+                model_name=EMBEDDING_MODEL,
+                model_kwargs={"device": "cpu"},
+                encode_kwargs={"normalize_embeddings": True}
+            )
+
+        # Make sure to assign it to your state object as you did before
+        state.embeddings = self.embeddings
         print("Embeddings Loaded")
 
     def _load_artifacts(self):
