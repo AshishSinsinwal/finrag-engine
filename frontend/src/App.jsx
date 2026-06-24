@@ -4,7 +4,7 @@ import Topbar from "./components/layout/Topbar";
 import Home from "./pages/Home";
 import History from "./pages/History";
 import Pinned from "./pages/Pinned";
-import WorkspaceDetail from "./pages/WorkspaceDetail";
+import WorkspaceDetail from "./pages/workspaceDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
