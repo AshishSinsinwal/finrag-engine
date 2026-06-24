@@ -6,6 +6,11 @@ Currently indexed on **Apple's 2025 Form 10-K** filing. Ask natural language que
 
 ---
 
+## RAG Pipeline
+
+![RAG Pipeline](./frontend/assets/rag-pipeline.png)
+
+
 ## Quick Snap
 
 | View | Preview |
