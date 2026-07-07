@@ -5,7 +5,7 @@ import { User, Mail, Lock, Layers, AlertCircle, Loader2 } from "lucide-react";
 
 export default function Register() {
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const { register , login} = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,6 +20,9 @@ export default function Register() {
 
     try {
       await register(name, email, password);
+      if(login){
+        await login(email, password);
+      }
       navigate("/");
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");
